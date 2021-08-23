@@ -87,8 +87,12 @@ def greatest_cases_increment():
 
     return result_array
 
-
 def lambda_handler(event, context):
+    if not event['queryStringParameters']:
+         return {
+        'statusCode': 401,
+        'body': json.dumps('invoking this function without parameters is not allowed')
+    }
     params = event['queryStringParameters']
     if not "action" in params:
         return {
@@ -109,6 +113,7 @@ def lambda_handler(event, context):
     if action == 'most_infected':
         response = greatest_cases_increment()
         statusCode = 200
+    #used only by grafana
     logger.info(response)
     return {
         'statusCode': statusCode,
